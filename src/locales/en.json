@@ -1,0 +1,8 @@
+{
+  "play": "Play",
+  "pause": "Pause",
+  "mute": "Mute",
+  "unmute": "Unmute",
+  "solo": "Solo",
+  "loaded": "Loaded: {{filename}}"
+}

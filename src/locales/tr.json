@@ -1,0 +1,8 @@
+{
+  "play": "Oynat",
+  "pause": "Duraklat",
+  "mute": "Sessize Al",
+  "unmute": "Sesi Aç",
+  "solo": "Tek Çal",
+  "loaded": "Yüklendi: {{filename}}"
+}
