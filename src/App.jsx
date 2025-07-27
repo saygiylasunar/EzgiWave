@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import GlobalControls from "./components/GlobalControls";
+import TrackUnit from "./components/TrackUnit";
+import useDAWState from "./hooks/useDAWState";
+import "./styles/main.scss";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const {
+    tracks,
+    setTracks,
+    isPlaying,
+    playAll,
+    pauseAll,
+    rewindAll,
+    masterVolume,
+    setMasterVolume,
+    currentTime,
+    duration,
+    detectInfo,
+    updateTrackVolume,
+    setTrackAudioRef,
+  } = useDAWState();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="app-container">
+      <h1>EzgiWave</h1>
 
-export default App
+      <div className="track-list">
+        {tracks.length === 0 ? (
+          <TrackUnit
+            isEmpty
+            onAdd={(newTrack) => setTracks([...tracks, newTrack])}
+          />
+        ) : (
+          tracks.map((track, index) => (
+            <TrackUnit
+              key={track.id}
+              index={index}
+              track={track}
+              onUpdate={(updated) => {
+                const updatedTracks = [...tracks];
+                updatedTracks[index] = { ...updatedTracks[index], ...updated };
+                setTracks(updatedTracks);
+              }}
+              onRemove={() => {
+                const updated = [...tracks];
+                updated.splice(index, 1);
+                setTracks(updated);
+              }}
+              onRef={(ref) => setTrackAudioRef(track.id, ref)}
+            />
+          ))
+        )}
+      </div>
+
+      <GlobalControls
+        isPlaying={isPlaying}
+        onPlayPause={() => (isPlaying ? pauseAll() : playAll())}
+        onRewindAll={rewindAll}
+        currentTime={currentTime}
+        duration={duration}
+        masterVolume={masterVolume}
+        onMasterVolumeChange={setMasterVolume}
+        detectInfo={detectInfo}
+      />
+    </div>
+  );
+};
+
+export default App;
