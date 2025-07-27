@@ -1,0 +1,35 @@
+{
+  "app": {
+    "title": "EzgiWave",
+    "description": "Multi-track audio assistant for creative sound design."
+  },
+  "controls": {
+    "play": "Play",
+    "pause": "Pause",
+    "rewind": "Rewind",
+    "detect": "Detect",
+    "volume": "Volume",
+    "mute": "Mute",
+    "solo": "Solo",
+    "addTrack": "Add Track",
+    "removeTrack": "Remove Track"
+  },
+  "status": {
+    "loading": "Loading...",
+    "noTracks": "No tracks loaded",
+    "error": "An error occurred"
+  },
+  "track": {
+    "track": "Track",
+    "balance": "Balance",
+    "seek": "Seek",
+    "analyzing": "Analyzing...",
+    "detectedBPM": "Detected BPM",
+    "detectedNote": "Detected Note"
+  },
+  "modals": {
+    "confirmDelete": "Are you sure you want to delete this track?",
+    "ok": "OK",
+    "cancel": "Cancel"
+  }
+}
