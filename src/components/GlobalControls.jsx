@@ -1,66 +1,57 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import "../styles/components/GlobalControls.scss";
 
 const GlobalControls = ({
   isPlaying,
-  onPlayPause,
-  onRewindAll,
-  currentTime,
-  duration,
-  masterVolume,
-  onMasterVolumeChange,
-  detectInfo = { bpm: null, note: null },
+  onPlay,
+  onPause,
+  onRewind,
+  onSetVolume,
+  globalVolume,
+  bpm,
+  note,
+  onDetect,
 }) => {
   const { t } = useTranslation();
 
-  const formatTime = (t) => {
-    if (!t || isNaN(t)) return "0:00";
-    const mins = Math.floor(t / 60);
-    const secs = Math.floor(t % 60)
-      .toString()
-      .padStart(2, "0");
-    return `${mins}:${secs}`;
+  const handlePlayPause = () => {
+    isPlaying ? onPause() : onPlay();
   };
 
-  const remaining = duration - currentTime;
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    if (!isNaN(newVolume)) {
+      onSetVolume(newVolume);
+    }
+  };
 
   return (
     <div className="global-controls">
-      <div className="global-buttons">
-        <button onClick={onPlayPause}>
-          {isPlaying ? t("global.pause") : t("global.play")}
-        </button>
-        <button onClick={onRewindAll}>{t("global.rewind")}</button>
-      </div>
+      <button onClick={handlePlayPause}>
+        {isPlaying ? t("global.pause") : t("global.play")}
+      </button>
 
-      <div className="global-status">
-        <span>{t("global.time")}:</span>
-        <span>
-          {formatTime(currentTime)} / {formatTime(duration)} / -
-          {formatTime(remaining)}
-        </span>
-      </div>
+      <button onClick={onRewind}>{t("global.rewind")}</button>
 
-      <div className="global-volume">
-        <label>{t("global.volume")}:</label>
+      <label>
+        {t("global.volume")}
         <input
           type="range"
           min="0"
           max="1"
           step="0.01"
-          value={masterVolume}
-          onChange={(e) => onMasterVolumeChange(parseFloat(e.target.value))}
+          value={globalVolume}
+          onChange={handleVolumeChange}
         />
-      </div>
+      </label>
 
-      <div className="global-detect">
+      <div className="detect-info">
+        <span>BPM: {bpm ?? "–"}</span>
         <span>
-          {t("global.bpm")}: {detectInfo.bpm || "--"}
+          {t("global.note")}: {note ?? "–"}
         </span>
-        <span>
-          {t("global.note")}: {detectInfo.note || "--"}
-        </span>
+        <button onClick={onDetect}>{t("global.detect")}</button>
       </div>
     </div>
   );

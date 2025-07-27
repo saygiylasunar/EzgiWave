@@ -2,52 +2,46 @@ import React from "react";
 import GlobalControls from "./components/GlobalControls";
 import TrackUnit from "./components/TrackUnit";
 import useDAWState from "./hooks/useDAWState";
-import "./styles/main.scss";
+import "./styles/App.scss";
+import { useTranslation } from "react-i18next";
 
 const App = () => {
   const {
     tracks,
-    setTracks,
     isPlaying,
+    globalVolume,
+    bpm,
+    note,
+    addTrack,
+    removeTrack,
+    updateTrack,
+    setTrackRef,
     playAll,
     pauseAll,
     rewindAll,
-    masterVolume,
-    setMasterVolume,
-    currentTime,
-    duration,
-    detectInfo,
-    updateTrackVolume,
-    setTrackAudioRef,
+    setAllVolume,
+    analyzeTracks,
   } = useDAWState();
 
-  return (
-    <div className="app-container">
-      <h1>EzgiWave</h1>
+  const { t } = useTranslation();
 
-      <div className="track-list">
+  return (
+    <div className="app">
+      <h1>{t("app.title")}</h1>
+
+      <div className="tracks-wrapper">
         {tracks.length === 0 ? (
-          <TrackUnit
-            isEmpty
-            onAdd={(newTrack) => setTracks([...tracks, newTrack])}
-          />
+          <TrackUnit isEmpty onAdd={addTrack} />
         ) : (
-          tracks.map((track, index) => (
+          tracks.map((track, idx) => (
             <TrackUnit
               key={track.id}
-              index={index}
+              index={idx}
               track={track}
-              onUpdate={(updated) => {
-                const updatedTracks = [...tracks];
-                updatedTracks[index] = { ...updatedTracks[index], ...updated };
-                setTracks(updatedTracks);
-              }}
-              onRemove={() => {
-                const updated = [...tracks];
-                updated.splice(index, 1);
-                setTracks(updated);
-              }}
-              onRef={(ref) => setTrackAudioRef(track.id, ref)}
+              onRemove={() => removeTrack(track.id)}
+              onUpdate={(data) => updateTrack(track.id, data)}
+              onRef={(ref) => setTrackRef(track.id, ref)}
+              onAdd={addTrack}
             />
           ))
         )}
@@ -55,13 +49,14 @@ const App = () => {
 
       <GlobalControls
         isPlaying={isPlaying}
-        onPlayPause={() => (isPlaying ? pauseAll() : playAll())}
-        onRewindAll={rewindAll}
-        currentTime={currentTime}
-        duration={duration}
-        masterVolume={masterVolume}
-        onMasterVolumeChange={setMasterVolume}
-        detectInfo={detectInfo}
+        onPlay={playAll}
+        onPause={pauseAll}
+        onRewind={rewindAll}
+        onSetVolume={setAllVolume}
+        globalVolume={globalVolume}
+        bpm={bpm}
+        note={note}
+        onDetect={analyzeTracks}
       />
     </div>
   );

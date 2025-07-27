@@ -1,95 +1,87 @@
-// src/hooks/useDAWState.js
-import { useState, useRef, useEffect } from "react";
+// src/hooks/useDawState.jsx
+import { useRef, useState } from "react";
 
 const useDAWState = () => {
-  const [tracks, setTracks] = useState([]); // her track { id, audioRef, file, volume, muted, soloed, balance }
+  const [tracks, setTracks] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [masterVolume, setMasterVolume] = useState(1);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [detectInfo, setDetectInfo] = useState({ bpm: null, note: null });
+  const [globalVolume, setGlobalVolume] = useState(1);
+  const [bpm, setBpm] = useState(null);
+  const [note, setNote] = useState(null);
+  const trackRefs = useRef({});
 
-  const updateDurations = () => {
-    const maxDuration = tracks.reduce((max, t) => {
-      if (t.audioRef?.current) {
-        return Math.max(max, t.audioRef.current.duration || 0);
-      }
-      return max;
-    }, 0);
-    setDuration(maxDuration);
+  const addTrack = (track) => {
+    setTracks((prev) => [...prev, track]);
+  };
+
+  const removeTrack = (id) => {
+    setTracks((prev) => prev.filter((t) => t.id !== id));
+    delete trackRefs.current[id];
+  };
+
+  const updateTrack = (id, data) => {
+    setTracks((prev) => prev.map((t) => (t.id === id ? { ...t, ...data } : t)));
+  };
+
+  const setTrackRef = (id, ref) => {
+    trackRefs.current[id] = ref;
   };
 
   const playAll = () => {
-    tracks.forEach((t) => {
-      if (t.audioRef?.current) {
-        t.audioRef.current.play();
-      }
+    Object.values(trackRefs.current).forEach((ref) => {
+      try {
+        ref.current?.play?.();
+      } catch {}
     });
     setIsPlaying(true);
   };
 
   const pauseAll = () => {
-    tracks.forEach((t) => {
-      if (t.audioRef?.current) {
-        t.audioRef.current.pause();
-      }
+    Object.values(trackRefs.current).forEach((ref) => {
+      try {
+        ref.current?.pause?.();
+      } catch {}
     });
     setIsPlaying(false);
   };
 
   const rewindAll = () => {
-    tracks.forEach((t) => {
-      if (t.audioRef?.current) {
-        t.audioRef.current.currentTime = 0;
+    Object.values(trackRefs.current).forEach((ref) => {
+      try {
+        ref.current.currentTime = 0;
+      } catch {}
+    });
+  };
+
+  const setAllVolume = (vol) => {
+    Object.values(trackRefs.current).forEach((ref) => {
+      if (ref?.current && !isNaN(vol)) {
+        ref.current.volume = vol;
       }
     });
-    setCurrentTime(0);
+    setGlobalVolume(vol);
   };
 
-  const updateTrackVolume = (id, volume) => {
-    setTracks((prev) => prev.map((t) => (t.id === id ? { ...t, volume } : t)));
+  const analyzeTracks = () => {
+    // Bu kısım gerçek analiz fonksiyonu entegresiyle değiştirilecek
+    setBpm(120); // örnek değer
+    setNote("C#"); // örnek değer
   };
-
-  const setTrackAudioRef = (id, ref) => {
-    setTracks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, audioRef: ref } : t))
-    );
-  };
-
-  useEffect(() => {
-    if (tracks.length > 0) {
-      updateDurations();
-    }
-  }, [tracks]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (isPlaying) {
-        const maxTime = Math.max(
-          ...tracks.map((t) => t.audioRef?.current?.currentTime || 0)
-        );
-        setCurrentTime(maxTime);
-      }
-    }, 200);
-
-    return () => clearInterval(interval);
-  }, [isPlaying, tracks]);
 
   return {
     tracks,
-    setTracks,
     isPlaying,
+    globalVolume,
+    bpm,
+    note,
+    addTrack,
+    removeTrack,
+    updateTrack,
+    setTrackRef,
     playAll,
     pauseAll,
     rewindAll,
-    masterVolume,
-    setMasterVolume,
-    currentTime,
-    duration,
-    detectInfo,
-    setDetectInfo,
-    updateTrackVolume,
-    setTrackAudioRef,
+    setAllVolume,
+    analyzeTracks,
   };
 };
 

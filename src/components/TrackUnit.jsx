@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "../styles/components/TrackUnit.scss";
+import WaveSurfer from "wavesurfer.js";
 
 const TrackUnit = ({
   isEmpty,
@@ -13,6 +14,11 @@ const TrackUnit = ({
 }) => {
   const { t } = useTranslation();
   const audioRef = useRef(null);
+  const audioContextRef = useRef(
+    new (window.AudioContext || window.webkitAudioContext)()
+  );
+  const waveContainerRef = useRef(null);
+  const waveSurferRef = useRef(null);
   const [localVolume, setLocalVolume] = useState(track?.volume || 1);
   const [hoverTime, setHoverTime] = useState(null);
   const [isMuted, setIsMuted] = useState(track?.muted || false);
@@ -27,9 +33,55 @@ const TrackUnit = ({
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : localVolume;
+      audioRef.current.volume = isMuted
+        ? 0
+        : isNaN(localVolume)
+        ? 0
+        : localVolume;
     }
   }, [localVolume, isMuted]);
+
+  useEffect(() => {
+    if (audioRef.current && audioRef.current.src) {
+      if (waveSurferRef.current) {
+        waveSurferRef.current.destroy();
+        waveSurferRef.current = null;
+      }
+      waveSurferRef.current = WaveSurfer.create({
+        container: waveContainerRef.current,
+        waveColor: "#444",
+        progressColor: "#00f0ff",
+        cursorColor: "#fff",
+        height: 64,
+        normalize: true,
+        responsive: true,
+      });
+
+      waveSurferRef.current.load(audioRef.current.src);
+
+      waveSurferRef.current.on("seek", (progress) => {
+        if (audioRef.current.duration) {
+          audioRef.current.currentTime = progress * audioRef.current.duration;
+        }
+      });
+    }
+    return () => {
+      if (waveSurferRef.current) {
+        waveSurferRef.current.destroy();
+        waveSurferRef.current = null;
+      }
+    };
+  }, [track?.url]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      const ctx = audioContextRef.current;
+      const source = ctx.createMediaElementSource(audioRef.current);
+      const panner = ctx.createStereoPanner();
+      panner.pan.value = balance / 100;
+      source.connect(panner).connect(ctx.destination);
+    }
+  }, [balance]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -38,12 +90,11 @@ const TrackUnit = ({
     const newTrack = {
       id: Date.now(),
       file,
-      audioRef: audioRef,
+      url: audioURL,
       volume: 1,
       muted: false,
       soloed: false,
       balance: 0,
-      url: audioURL,
     };
     onAdd(newTrack);
   };
@@ -53,25 +104,6 @@ const TrackUnit = ({
     setLocalVolume(newVolume);
     onUpdate?.({ volume: newVolume });
   };
-
-  const handleProgressClick = (e) => {
-    const rect = e.target.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    if (audioRef.current && audioRef.current.duration) {
-      audioRef.current.currentTime = percent * audioRef.current.duration;
-    }
-  };
-
-  const handleHover = (e) => {
-    const rect = e.target.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    if (audioRef.current && audioRef.current.duration) {
-      const seconds = percent * audioRef.current.duration;
-      setHoverTime(seconds);
-    }
-  };
-
-  const resetHover = () => setHoverTime(null);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
@@ -84,7 +116,7 @@ const TrackUnit = ({
   };
 
   const handleBalanceChange = (e) => {
-    const value = parseInt(e.target.value);
+    const value = parseFloat(e.target.value);
     setBalance(value);
     onUpdate?.({ balance: value });
   };
@@ -107,29 +139,18 @@ const TrackUnit = ({
 
   return (
     <div className="track-unit">
-      <audio ref={audioRef} src={track.url} preload="metadata" />
+      <audio
+        ref={audioRef}
+        src={track.url}
+        preload="metadata"
+        onLoadedMetadata={() => {
+          if (isNaN(audioRef.current.duration)) {
+            audioRef.current.currentTime = 0;
+          }
+        }}
+      />
 
-      <div
-        className="progress-bar"
-        onClick={handleProgressClick}
-        onMouseMove={handleHover}
-        onMouseLeave={resetHover}
-      >
-        <div className="progress-indicator" />
-        {hoverTime !== null && audioRef.current?.duration && (
-          <div
-            className="hover-time"
-            style={{
-              left: `${(hoverTime / audioRef.current.duration) * 100}%`,
-            }}
-          >
-            {Math.floor(hoverTime / 60)}:
-            {Math.floor(hoverTime % 60)
-              .toString()
-              .padStart(2, "0")}
-          </div>
-        )}
-      </div>
+      <div className="waveform-container" ref={waveContainerRef}></div>
 
       <div className="track-controls">
         <button onClick={onRemove}>{t("track.removeTrack")}</button>
