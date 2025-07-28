@@ -57,13 +57,7 @@ Pull requests are welcome. Let’s shape the future of audio tooling together!
 🧠 License
 MIT © saygiylasunar
 
-yaml
-Kopyala
-Düzenle
-
 ---
-
-Ayrıca `README.tr.md` için kısa bir başlangıç önerisi:
 
 ```markdown
 # 🎶 EzgiWave · Çok Kanallı Ses Asistanı (Alpha)
