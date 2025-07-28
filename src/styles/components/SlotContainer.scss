@@ -136,3 +136,249 @@
   justify-content: center;
   margin-top: 1rem;
 }
+
+.progress-bar-wrapper {
+  margin: 0.5rem 0;
+}
+
+.progress-bar {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  border-radius: 4px;
+  background: $color-border;
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: $color-primary;
+    border: 2px solid $color-surface;
+    box-shadow: 0 0 4px $color-primary;
+    transition: background 0.3s ease;
+  }
+
+  &::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: $color-primary;
+    border: 2px solid $color-surface;
+    box-shadow: 0 0 4px $color-primary;
+  }
+}
+.slot-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+
+  .control-btn {
+    padding: 0.4rem 0.6rem;
+    background: $color-border;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+
+    &.active {
+      background: $color-primary;
+      color: $text-inverse;
+    }
+  }
+
+  .volume-slider,
+  .pan-slider {
+    width: 80px;
+    height: 4px;
+    background: $color-border;
+    border-radius: 3px;
+    appearance: none;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: $color-success;
+    }
+  }
+
+  .detect-placeholder {
+    font-size: 1.4rem;
+    padding: 0 0.5rem;
+  }
+}
+.slot-filename {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: $text-main;
+  opacity: 0.85;
+}
+
+.slot-controls-compact {
+  display: inline-flex; // 👈 inline-block benzeri hizalama
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  padding: 0.25rem 0.5rem;
+
+  .control-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.45rem;
+    border: none;
+    border-radius: 4px;
+    background: $color-border;
+    color: $text-main;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &.active {
+      background-color: $color-primary;
+      color: $text-inverse;
+    }
+  }
+
+  .instrument-icon {
+    font-size: 1.1rem;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  .volume-slider.tiny,
+  .pan-slider.tiny {
+    width: 60px;
+    height: 4px;
+    appearance: none;
+    background: $color-border;
+    border-radius: 2px;
+    display: inline-block;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      background: $color-success;
+      border-radius: 50%;
+    }
+  }
+}
+.slot-body {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.slot-progress-vertical {
+  display: inline-block;
+  height: 100%;
+  min-height: 120px;
+
+  .progress-vertical {
+    writing-mode: bt-lr; // dikey hizalama
+    -webkit-appearance: slider-vertical;
+    width: 6px;
+    height: 100%;
+    background: $color-border;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: $color-attention;
+    }
+  }
+}
+
+.slot-control-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slot-controls-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.5rem;
+
+  .control-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.45rem;
+    border: none;
+    border-radius: 4px;
+    background: $color-border;
+    color: $text-main;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &.active {
+      background-color: $color-primary;
+      color: $text-inverse;
+    }
+  }
+
+  .instrument-icon {
+    font-size: 1.1rem;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  .volume-slider.tiny,
+  .pan-slider.tiny {
+    width: 60px;
+    height: 4px;
+    appearance: none;
+    background: $color-border;
+    border-radius: 2px;
+    display: inline-block;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      background: $color-success;
+      border-radius: 50%;
+    }
+  }
+
+  .bpm-placeholder,
+  .note-placeholder {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+}
+.slot-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.slot-waveform {
+  flex: 1;
+  min-width: 280px;
+  max-width: 320px;
+  background-color: $color-surface;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.slot-control-blocks {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 200px;
+}

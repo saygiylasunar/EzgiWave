@@ -23,6 +23,7 @@
     "track": "Track",
     "balance": "Balance",
     "seek": "Seek",
+    "selectAudio": "Select audio file",
     "analyzing": "Analyzing...",
     "detectedBPM": "Detected BPM",
     "detectedNote": "Detected Note"
