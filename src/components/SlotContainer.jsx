@@ -30,6 +30,12 @@ const SlotContainer = () => {
               <span>
                 {t("track.track")} #{index + 1}
               </span>
+
+              {/* Instrument Icon Placeholder */}
+              <div className="instrument-icon" title="Detected Instrument">
+                🎸
+              </div>
+
               <button
                 className="remove-slot-button"
                 onClick={() => removeSlot(slot.id)}
@@ -37,15 +43,39 @@ const SlotContainer = () => {
                 {t("modals.cancel")}
               </button>
             </div>
-            {/* Future content of slot can be rendered here */}
 
-            {index === slots.length - 1 && (
-              <button className="add-slot-button" onClick={addSlot}>
-                {t("controls.addTrack")}
-              </button>
-            )}
+            <div className="slot-controls">
+              <div className="toggle-buttons">
+                <button className="slot-toggle">S</button>
+                <button className="slot-toggle">M</button>
+              </div>
+
+              <div className="sliders">
+                <div className="slider-group">
+                  <label>Vol</label>
+                  <input type="range" min="0" max="100" defaultValue="80" />
+                </div>
+                <div className="slider-group">
+                  <label>Pan</label>
+                  <input type="range" min="-50" max="50" defaultValue="0" />
+                </div>
+              </div>
+            </div>
+
+            {/* Track Progress Bar (visual only for now) */}
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: "45%" }}></div>
+            </div>
           </div>
         ))}
+
+        {slots.length > 0 && (
+          <div className="add-track-container">
+            <button className="add-slot-button" onClick={addSlot}>
+              {t("controls.addTrack")}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
