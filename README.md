@@ -1,26 +1,22 @@
 # 🎶 EzgiWave · Multi-Track Audio Assistant (Alpha)
 
-EzgiWave is a cross-platform DAW companion app for real-time audio slot control. Designed to help audio creators visualize and manage individual sound layers with volume, pan, mute/solo, waveform preview and analysis.
+EzgiWave is a cross-platform DAW companion for lightweight multi-track control, waveform inspection and future audio analysis.
 
 ![Screenshot](./screenshots/ezgiwave-preview.png)
 
----
+## ✨ Current scope
 
-## ✨ Features
+| Feature | Status |
+| --- | --- |
+| Per-track volume / pan / mute / solo | Alpha |
+| Waveform preview | Alpha |
+| File-based slots | Alpha |
+| Global playback controls | Planned |
+| BPM / note / instrument analysis | Planned |
+| Track reordering / grouping | Planned |
+| English / Turkish i18n | In progress |
 
-| Feature             | Description                                                       |
-| ------------------- | ----------------------------------------------------------------- |
-| 🎛️ Track Controls   | Volume, Pan, Mute, Solo – per slot                                |
-| 📈 Waveform Viewer  | Instant waveform preview on audio load                            |
-| 🎚️ Global Controls  | Play / Pause / Rewind all tracks (coming soon)                    |
-| 📦 File-Based Slots | Add audio files into slots with real-time waveform rendering      |
-| 🎧 Detection Ready  | Instrument, BPM, Note placeholders (detection engine coming soon) |
-| ⚡ Fast & Compact   | Designed for simplicity and speed with modular slot layout        |
-| 🌍 i18n Ready       | English / Turkish localization supported                          |
-
----
-
-## 🚀 Getting Started
+## 🚀 Getting started
 
 ```bash
 git clone https://github.com/saygiylasunar/EzgiWave.git
@@ -29,38 +25,44 @@ npm install
 npm run dev
 ```
 
-🛠 Tech Stack
-React + Vite
+## 🛠 Tech stack
 
-SCSS with design tokens
+- React + Vite
+- SCSS design tokens
+- custom waveform rendering
+- Web Audio API integration path
+- bilingual i18n structure
 
-Web Audio API (planned)
+## Alpha priorities
 
-Custom waveform rendering
+EzgiWave should stay useful before becoming a full DAW. The immediate order is:
 
-Multi-language i18n
+1. deterministic slot loading and track state
+2. synchronized playback transport
+3. stable waveform rendering
+4. drag/reorder and grouping
+5. analysis modules such as BPM, note and instrument hints
 
-📌 Roadmap
-Audio slot system with mute/solo/volume
+Analysis features should remain optional so they do not block the basic editing/control workflow.
 
-Waveform preview component
+## Design principle
 
-Playback engine with precise sync
+> Small companion, not another DAW.
 
-BPM & note detection module
+The interface should make common track operations faster without duplicating the complexity of a full production suite.
 
-Track drag-reorder and group controls
+## 🤝 Contributing
 
-🤝 Contributing
-Pull requests are welcome. Let’s shape the future of audio tooling together!
+Pull requests are welcome. Keep changes modular and avoid coupling playback, waveform rendering and future analysis engines unnecessarily.
 
-🧠 License
+## 🧠 License
+
 MIT © saygiylasunar
 
 ---
 
-```markdown
-# 🎶 EzgiWave · Çok Kanallı Ses Asistanı (Alpha)
+## Türkçe
 
-EzgiWave, ses prodüksiyon sürecinizde size yardımcı olmak için geliştirilmiş, çok kanallı slot yönetimi sunan bir DAW yardımcı aracıdır. Gerçek zamanlı dalga formu önizlemesi, her bir ses kanalı için ayrı kontrol imkanı ve yakında gelecek analiz özellikleriyle birlikte modern ve kullanıcı dostu bir tasarım sunar.
-```
+EzgiWave; çok kanallı ses dosyalarını slot mantığıyla yönetmek, dalga formlarını hızlıca görmek ve ileride BPM / nota / enstrüman analizi eklemek için geliştirilen hafif bir DAW yardımcı aracıdır.
+
+Temel hedef, tam teşekküllü bir DAW olmak yerine mevcut prodüksiyon akışını hızlandıran küçük ve modüler bir araç olarak kalmaktır.
